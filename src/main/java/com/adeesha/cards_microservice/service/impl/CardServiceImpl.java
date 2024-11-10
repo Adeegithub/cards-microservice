@@ -1,8 +1,11 @@
 package com.adeesha.cards_microservice.service.impl;
 
 import com.adeesha.cards_microservice.constants.CardConstants;
+import com.adeesha.cards_microservice.dto.CardsDto;
 import com.adeesha.cards_microservice.entity.Cards;
 import com.adeesha.cards_microservice.exception.CardAlreadyExistsException;
+import com.adeesha.cards_microservice.exception.ResourceNotFoundException;
+import com.adeesha.cards_microservice.mapper.CardsMapper;
 import com.adeesha.cards_microservice.repository.CardsRepository;
 import com.adeesha.cards_microservice.service.ICardService;
 import lombok.AllArgsConstructor;
@@ -27,6 +30,14 @@ public class CardServiceImpl implements ICardService {
         cardsRepository.save(createNewCard(mobileNumber));
     }
 
+    @Override
+    public CardsDto fetchCard(String mobileNumber) {
+        Cards cards = cardsRepository.findByMobileNumber(mobileNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Card","Mobile NUmber", mobileNumber)
+        );
+        return CardsMapper.mapToCardsDto(cards,new CardsDto());
+    }
+
     private Cards createNewCard(String mobileNumber) {
         Cards newCard = new Cards();
         long randomCardNumber = 100000000000L + new Random().nextInt(900000000);
@@ -38,4 +49,5 @@ public class CardServiceImpl implements ICardService {
         newCard.setAvailableAmount(CardConstants.NEW_CARD_LIMIT);
         return newCard;
     }
+
 }

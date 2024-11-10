@@ -1,6 +1,7 @@
 package com.adeesha.cards_microservice.controller;
 
 import com.adeesha.cards_microservice.constants.CardConstants;
+import com.adeesha.cards_microservice.dto.CardsDto;
 import com.adeesha.cards_microservice.dto.ErrorResponseDto;
 import com.adeesha.cards_microservice.dto.ResponseDto;
 import com.adeesha.cards_microservice.service.ICardService;
@@ -17,10 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,5 +59,33 @@ public class CardsController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ResponseDto(CardConstants.STATUS_201, CardConstants.MESSAGE_201));
+    }
+
+
+    @Operation(
+            summary = "Fetch Card Details REST API",
+            description = "REST API to fetch card details based on a mobile number"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    })
+    @GetMapping("/fetch")
+    public ResponseEntity<CardsDto> fetchCardDetails(@RequestParam
+                                                         @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
+                                                         String mobileNumber){
+        CardsDto cardsDto = iCardService.fetchCard(mobileNumber);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(cardsDto);
     }
 }
