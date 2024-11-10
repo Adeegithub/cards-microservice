@@ -30,14 +30,6 @@ public class CardServiceImpl implements ICardService {
         cardsRepository.save(createNewCard(mobileNumber));
     }
 
-    @Override
-    public CardsDto fetchCard(String mobileNumber) {
-        Cards cards = cardsRepository.findByMobileNumber(mobileNumber).orElseThrow(
-                () -> new ResourceNotFoundException("Card","Mobile NUmber", mobileNumber)
-        );
-        return CardsMapper.mapToCardsDto(cards,new CardsDto());
-    }
-
     private Cards createNewCard(String mobileNumber) {
         Cards newCard = new Cards();
         long randomCardNumber = 100000000000L + new Random().nextInt(900000000);
@@ -48,6 +40,14 @@ public class CardServiceImpl implements ICardService {
         newCard.setAmountUsed(0);
         newCard.setAvailableAmount(CardConstants.NEW_CARD_LIMIT);
         return newCard;
+    }
+
+    @Override
+    public CardsDto fetchCard(String mobileNumber) {
+        Cards cards = cardsRepository.findByMobileNumber(mobileNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Card","Mobile NUmber", mobileNumber)
+        );
+        return CardsMapper.mapToCardsDto(cards,new CardsDto());
     }
 
 }
