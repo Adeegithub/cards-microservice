@@ -8,4 +8,6 @@ public interface ICardService {
     CardsDto fetchCard(String mobileNumber);
 
     boolean updateCard(CardsDto cardsDto);
+
+    boolean deleteCard(String mobileNumber);
 }
