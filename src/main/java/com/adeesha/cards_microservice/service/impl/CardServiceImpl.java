@@ -50,4 +50,15 @@ public class CardServiceImpl implements ICardService {
         return CardsMapper.mapToCardsDto(cards,new CardsDto());
     }
 
+    @Override
+    public boolean updateCard(CardsDto cardsDto) {
+        Cards cards = cardsRepository.findByCardNumber(cardsDto.getCardNumber()).orElseThrow(
+                () -> new ResourceNotFoundException("Card","Card Number", cardsDto.getCardNumber())
+        );
+        CardsMapper.mapToCards(cardsDto,cards);
+        cardsRepository.save(cards);
+        return true;
+    }
+
+
 }
