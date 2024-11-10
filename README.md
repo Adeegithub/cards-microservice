@@ -3,7 +3,7 @@ I'm developing a project to demonstrate microservices architecture using SpringB
 2. Cards Service and 
 3. Loan Service. 
 
-**This repo is for the loans service.**
+**This repo is for the cards service.**
 
 You can navigate to the other services using the following links.
 1. Accounts Service -> [https://github.com/Adeegithub/accounts-microservice](url)
